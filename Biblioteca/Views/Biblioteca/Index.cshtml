@@ -206,7 +206,30 @@
         <button class="nav-btn right" onclick="scrollGrid(1)"><i class="bi bi-chevron-right"></i></button>
     </div>
 
+    <section class="biblioteca-header" style="margin-top: 40px;">
+        <h2>Autores Cadastrados</h2>
+    </section>
 
+    <div style="background: var(--white); padding: 20px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 30px;">
+        @if (ViewBag.Autores != null)
+        {
+            <ul style="list-style-type: none; padding-left: 0;">
+                @foreach (var autor in (IEnumerable<Biblioteca.Models.Autor>)ViewBag.Autores)
+                {
+                    <li style="margin-bottom: 10px;">
+                        <i class="bi bi-person-fill" style="color: var(--accent); margin-right: 8px;"></i>
+                        <a asp-action="Autor" asp-route-id="@autor.Id" style="text-decoration: none; color: var(--primary); font-weight: 500;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--primary)'">
+                            @autor.Nome
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>Nenhum autor cadastrado ainda.</p>
+        }
+    </div>
 
 </div>
 

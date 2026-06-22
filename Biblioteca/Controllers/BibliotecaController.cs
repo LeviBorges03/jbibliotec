@@ -20,6 +20,9 @@ public class BibliotecaController : Controller
     public async Task<IActionResult> index()
     {
         var livros = await _livroRepository.BuscarTodosLivrosAsync();
+        var autores = await _autorRepository.BuscarTodosAutoresAsync();
+        ViewBag.Autores = autores;
+
         return View(livros);
     }
 
@@ -202,4 +205,42 @@ public class BibliotecaController : Controller
         return View(autor);
     }
    
+    // GET: Biblioteca/DeletarAutor/Id
+    [HttpGet]
+    public async Task<IActionResult> DeletarAutor(int id)
+    {
+        var autores = await _autorRepository.BuscarTodosAutoresAsync();
+        var autor = autores.FirstOrDefault(x => x.Id == id);
+
+        if (autor == null) return NotFound();
+
+        // Executa a checagem se há livros vinculados
+        bool temLivros = await _autorRepository.PossuiLivrosVinculadosAsync(id);
+
+        var viewModel = new DeletarAutorViewModel
+        {
+            Id = autor.Id,
+            Nome = autor.Nome,
+            PossuiLivrosVinculados = temLivros
+        };
+
+        return View(viewModel);
+    }
+
+    // POST: Biblioteca/DeletarAutor
+    [HttpPost, ActionName("DeletarAutor")]
+    public async Task<IActionResult> DeletarAutorConfirmado(int id)
+    {
+        // Proteção extra: Segurança caso o usuário tente forçar a requisição POST externamente
+        bool temLivros = await _autorRepository.PossuiLivrosVinculadosAsync(id);
+
+        if (temLivros)
+        {
+            // Se houver livros, cancela a operação e joga de volta para a listagem (ou Perfil do autor)
+            return RedirectToAction("Autor", new { id = id });
+        }
+
+        await _autorRepository.ExcluirAutorAsync(id);
+        return RedirectToAction("Index");
+    }
 }
