@@ -1,0 +1,220 @@
+@model List<Biblioteca.Models.Livro>
+
+@{
+    ViewData["Title"] = "Catálogo da Biblioteca";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/biblioteca.css" />
+    <style>
+        .autor-link-hover {
+            transition: color 0.2s;
+            cursor: pointer;
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .autor-link-hover i {
+            font-size: 0.8rem;
+            margin-right: 4px;
+        }
+
+        .autor-link-hover:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        
+        /* Coração de Favoritos */
+        .fav-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        .fav-icon:hover {
+            transform: scale(1.2);
+            color: #fff;
+        }
+        .fav-icon.active {
+            color: #e74c3c;
+        }
+
+        /* Container de Busca Animado */
+        .search-container {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .search-container.show {
+            max-height: 80px;
+            opacity: 1;
+            margin-bottom: 20px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            width: 60%;
+            max-width: 500px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 30px;
+            border: 2px solid #e0e0e0;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            outline: none;
+        }
+        
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
+        }
+
+        .search-icon-left {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95a5a6;
+            font-size: 1.1rem;
+        }
+
+        .filter-fav-btn {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            color: #7f8c8d;
+            border-radius: 30px;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-fav-btn:hover, .filter-fav-btn.active {
+            border-color: #e74c3c;
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.05);
+        }
+
+        /* Mensagem de Erro/NotFound com estilo */
+        .not-found-msg {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            grid-column: 1 / -1; /* Ocupa todas as colunas no grid */
+            text-align: center;
+            margin: 20px 0;
+            animation: fadeIn 0.4s ease;
+        }
+        .not-found-msg i {
+            font-size: 3rem;
+            color: #bdc3c7;
+            margin-bottom: 15px;
+        }
+        .not-found-msg h4 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .not-found-msg p {
+            color: #7f8c8d;
+        }
+        
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+}
+
+<div class="page-wrapper">
+    
+    <section class="biblioteca-header">
+        <h2>Catálogo de Clássicos</h2>
+    </section>
+
+    <div class="carousel-container">
+        @* Botão Esquerdo *@
+        <button class="nav-btn left" onclick="scrollGrid(-1)"><i class="bi bi-chevron-left"></i></button>
+
+        @* Grade de Livros com rolagem horizontal *@
+        <div class="livros-grid" id="livrosGrid">
+            
+            <div class="not-found-msg" id="notFoundMsg">
+                <i class="bi bi-journal-x"></i>
+                <h4>Puxa, não encontramos.</h4>
+                <p>Ainda não possuímos esse exemplar em nossa coleção.</p>
+            </div>
+
+            @foreach (var item in Model)
+            {
+                <div class="livro-card" data-titulo="@(item.Titulo != null ? item.Titulo.ToLower() : "")" data-autor="@(item.Autor != null ? item.Autor.Nome.ToLower() : "")">
+                    <div style="position: relative; display: flex; flex-direction: column; height: 100%;">
+
+                        
+                        <a asp-action="Livro" asp-route-id="@item.Id" class="livro-card-link" style="text-decoration: none; color: inherit;">
+                            <div class="livro-capa-placeholder" style="background-color: @item.CorCapa;">
+                                <span class="genero-tag">@item.Genero</span>
+                            </div>
+                        </a>
+                        <div class="livro-info">
+                            <a asp-action="Livro" asp-route-id="@item.Id" style="text-decoration: none; color: inherit;">
+                                <h4 title="@item.Titulo">@item.Titulo</h4>
+                            </a>
+                            @if (item.Autor != null)
+                            {
+                                <div>
+                                    <a asp-action="Autor" asp-route-id="@item.Autor.Id" class="autor-link-hover" title="@item.Autor.Nome" style="display: inline-block; margin-top: 5px;">
+                                        <i class="bi bi-pen" style="font-size: 0.8rem; margin-right:4px;"></i>@item.Autor.Nome
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @* Botão Direito *@
+        <button class="nav-btn right" onclick="scrollGrid(1)"><i class="bi bi-chevron-right"></i></button>
+    </div>
+
+
+
+</div>
+
+@section Scripts {
+    <script>
+        function scrollGrid(direction) {
+            const grid = document.getElementById('livrosGrid');
+            grid.scrollBy({ left: direction * 300, behavior: 'smooth' });
+        }
+    </script>
+}

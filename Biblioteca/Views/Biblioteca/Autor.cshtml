@@ -1,0 +1,110 @@
+@model Biblioteca.Models.Autor
+@{
+    ViewData["Title"] = "Perfil do Autor";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/biblioteca.css" />
+    <style>
+        /* Estilos baseados no Autor.css original (sem gradientes ou complexidades extras) */
+        .biblioteca-header-local {
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .biblioteca-header-local h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-top: 10px;
+        }
+
+        .voltar-link {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .voltar-link:hover { 
+            color: var(--primary);
+        }
+
+        .autor-hero {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .autor-essencial h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .autor-metadados {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .meta-dado {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rotulo {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            letter-spacing: 1px;
+        }
+
+        .valor {
+            font-weight: 600;
+            color: var(--primary);
+        }
+    </style>
+}
+
+<div class="page-wrapper">
+    <header class="biblioteca-header-local">
+        <a href="@Url.Action("Index", "Biblioteca")" class="voltar-link">
+            ← Voltar para a Biblioteca
+        </a>
+        <h2>Perfil do Autor</h2>
+    </header>
+
+    <main class="perfil-container">
+        <section class="autor-hero">
+            <div class="autor-essencial">
+                <h1>@Model.Nome</h1>
+                
+                <div class="autor-metadados">
+                    <div class="meta-dado">
+                        <span class="rotulo">Data de Nascimento:</span>
+                        <span class="valor">@Model.DataNascimento.ToString("dd/MM/yyyy")</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px;">
+                    <a asp-action="EditarAutor" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">Editar Autor</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-secao">
+            <div class="info-box" style="width: 100%;">
+                <h3>Biografia</h3>
+                <p>@(string.IsNullOrWhiteSpace(Model.Biografia) ? "Nenhuma biografia disponível." : Model.Biografia)</p>
+            </div>
+        </section>
+    </main>
+</div>

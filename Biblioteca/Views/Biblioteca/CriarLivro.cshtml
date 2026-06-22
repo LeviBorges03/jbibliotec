@@ -1,0 +1,46 @@
+@model Biblioteca.Models.CriarLivroViewModel
+@{
+    ViewData["Title"] = "Cadastrar Livro";
+}
+
+<div class="form-container">
+    <h2>Cadastro de Livro</h2>
+
+    <form asp-controller="Biblioteca" asp-action="CriarLivro" method="post">
+        <div class="form-group">
+            <label asp-for="Titulo">Título do Livro</label>
+            <input asp-for="Titulo" placeholder="Digite o título do livro" required />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="AutorId">Autor</label>
+            <select asp-for="AutorId" class="control" asp-items="ViewBag.Autores" required>
+                <option value="">Selecione um autor</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Genero">Categoria/Gênero</label>
+            <input asp-for="Genero" placeholder="Digite a categoria" required />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DataPublicacao">Data de Publicação</label>
+            <input asp-for="DataPublicacao" type="date" required />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="NumPaginas">Número de Páginas</label>
+            <input asp-for="NumPaginas" type="number" placeholder="Digite o número de páginas" required />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CorCapa">Cor da Capa</label>
+            <input asp-for="CorCapa" type="color" style="height: 40px; padding: 0;" />
+        </div>
+
+        <button type="submit" class="btn-submit">Cadastrar Livro</button>
+    </form>
+</div>
+
+

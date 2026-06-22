@@ -1,0 +1,325 @@
+/* Variáveis para facilitar alterações futuras de cores */
+:root {
+    --primary: #2c3e50;
+    --accent: #3498db;
+    --bg-light: #f4f7f6;
+    --white: #ffffff;
+    --shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.page-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.biblioteca-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.biblioteca-header h2 {
+    color: var(--primary);
+    font-weight: 700;
+    border-bottom: 3px solid var(--accent);
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+/* --- ESTILO DO CARROSSEL --- */
+.carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Reduzido para aproximar do botão de expansão */
+}
+
+.livros-grid {
+    display: flex;
+    flex-wrap: nowrap; /* Impede a quebra de linha por padrão */
+    overflow-x: auto; /* Permite scroll se os cards estourarem */
+    scroll-behavior: smooth;
+    gap: 20px;
+    padding: 20px 5px;
+    -ms-overflow-style: none;  /* Esconde barra de scroll no IE */
+    scrollbar-width: none;     /* Esconde barra de scroll no Firefox */
+    transition: all 0.5s ease-in-out; /* Transição suave para expansão */
+}
+
+/* Classe aplicada via JS para expandir o grid e mostrar todos os livros */
+.livros-grid.expandido {
+    display: grid;
+    /* Força exatamente 4 colunas em telas normais dividindo o espaço de forma igual */
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: center;
+    gap: 20px;
+    overflow-x: hidden;
+    padding-bottom: 40px;
+}
+
+/* Responsividade: para telas menores, ajustar a quantidade de colunas */
+@media (max-width: 900px) {
+    .livros-grid.expandido {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .livros-grid.expandido {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 450px) {
+    .livros-grid.expandido {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Quando expandido, os cards perdem o tamanho rígido (220px) e ocupam a coluna do grid */
+.livros-grid.expandido .livro-card {
+    width: 100%;
+    flex: none;
+}
+
+.livros-grid::-webkit-scrollbar {
+    display: none; /* Esconde barra de scroll no Chrome/Safari */
+}
+
+.livro-card {
+    width: 220px;
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.livro-card:hover {
+    transform: translateY(-5px);
+}
+
+.livro-capa-placeholder {
+    height: 280px;
+    background: #e0e0e0;
+    border-radius: 10px 10px 0 0;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+    /* Ajuste para que a imagem não transborde os cantos arredondados */
+    overflow: hidden; 
+}
+
+/* Imagem da capa (dinâmica) */
+.livro-capa-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Faz a imagem preencher a área cortando excessos sem distorcer (mantendo a proporção) */
+    object-fit: cover; 
+    /* Coloca a imagem atrás do conteúdo do placeholder, como a tag de gênero */
+    z-index: 1; 
+}
+
+
+.genero-tag {
+    background: var(--accent);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    position: relative;
+    z-index: 2; /* Garante que a tag fique sobre a imagem */
+}
+
+.livro-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.livro-info h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.livro-info p {
+    margin: 5px 0 0;
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+/* Botões de Navegação */
+.nav-btn {
+    background: var(--white);
+    border: none;
+    box-shadow: var(--shadow);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    position: absolute;
+    z-index: 10;
+    transition: background 0.3s, opacity 0.5s ease-in-out, visibility 0.5s;
+}
+
+.nav-btn.escondido {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.nav-btn:hover { background: var(--accent); color: white; }
+.left { left: -20px; }
+.right { right: -20px; }
+
+/* Botão de Expansão Elegante */
+.expand-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+    padding: 10px 0;
+}
+
+.expand-btn {
+    background: var(--white);
+    border: 2px solid var(--accent);
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.expand-btn:hover {
+    background: var(--accent);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
+}
+
+.expand-icon {
+    font-size: 1.2rem;
+    transition: transform 0.4s ease-in-out;
+    display: inline-block;
+}
+
+.expand-icon.rodado {
+    transform: rotate(180deg);
+}
+
+/* --- SEÇÃO INFORMATIVA --- */
+.info-secao {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.info-box h3 {
+    color: var(--primary);
+    margin-bottom: 15px;
+}
+
+.info-box p {
+    line-height: 1.6;
+    color: #555;
+}
+
+.extra-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: var(--bg-light);
+    border-radius: 8px;
+}
+
+.icon { font-size: 1.5rem; }
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .info-secao { grid-template-columns: 1fr; }
+    .nav-btn { display: none; } /* Em celulares, o usuário apenas arrasta com o dedo */
+    .livros-grid { overflow-x: scroll; }
+}
+/* Formulários Estilo Customizado para Adicionar Livro e Adicionar Autor */
+.form-container {
+    max-width: 550px;
+    margin: 40px auto;
+    background: var(--white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+.form-container h2 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--primary);
+}
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+.form-group input:focus, .form-group textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--accent);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+.btn-submit:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}

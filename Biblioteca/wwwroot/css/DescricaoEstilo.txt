@@ -1,0 +1,38 @@
+📖 Manual de Identidade Visual e Estrutura: Projeto Biblioteca
+
+Este documento serve como a "Bíblia de Estilo" para a interface da Biblioteca. Qualquer alteração futura deve respeitar os princípios abaixo para manter a harmonia visual e funcional.
+
+1. Paleta de Cores e Atmosfera
+O objetivo é um visual "Clean & Professional" (Limpo e Profissional).
+* **Cor Primária (`--primary`):** `#2c3e50` (Azul Oceano Escuro). Usada para títulos principais e textos de destaque. Transmite confiança.
+* **Cor de Destaque (`--accent`):** `#3498db` (Azul Vibrante). Usada para botões, tags e elementos de interação. Guia o olhar do usuário.
+* **Fundo da Página (`--bg-light`):** `#f4f7f6` (Cinza Gelo). Nunca use branco puro no fundo total para evitar cansaço visual.
+* **Fundo de Elementos:** `#ffffff` (Branco Puro). Reservado apenas para Cards e Boxes de informação para dar contraste.
+
+2. Tipografia (Letras)
+* **Fonte:** Prioridade para `Segoe UI`, `Roboto` ou `Sans-serif`.
+* **Regra de Ouro:** Títulos (`h2`, `h3`) devem ter `font-weight: 700` (negrito forte). Textos de apoio devem ter `font-size: 0.85rem` e cores cinzas (`#7f8c8d`) para não brigar com as informações principais.
+
+ 3. O "Carrossel" (Área de Navegação)
+A parte superior deve seguir o desenho do quadro branco:
+* **Comportamento:** Rolagem horizontal (`overflow-x: auto`). No desktop, as setas (`nav-btn`) são obrigatórias. No mobile, as setas somem e o usuário usa o toque.
+* **Setas:** Devem ser circulares, com fundo branco e sombra suave. Ao passar o mouse (*hover*), devem assumir a cor de destaque.
+* **Espaçamento:** O `gap` entre os livros deve ser de exatamente `20px`.
+
+4. Anatomia do Card (O Livro)
+Cada livro é um objeto sagrado na interface:
+* **Bordas:** Arredondamento de `10px` a `15px` (`border-radius`). Bordas quadradas são proibidas.
+* **Sombra:** Deve ser sutil (`0 4px 12px rgba(0,0,0,0.1)`). O card deve parecer que está flutuando levemente sobre o fundo.
+* **Interação:** Ao passar o mouse, o card **deve** subir (`translateY(-5px)`) em uma transição suave de `0.2s`.
+
+5. Seção de Informações (Rodapé de Conteúdo)
+A parte de baixo da página serve para dar contexto:
+* **Layout:** Dividida em duas colunas (Grid 1fr 1fr).
+* **Conteúdo:** A esquerda foca em texto (descritivo), a direita foca em ícones e dados rápidos (estatísticas).
+* **Contraste:** Esta seção deve estar dentro de um container branco com sombra para se destacar do fundo cinza da página.
+
+6. Regras de Código (Manutenibilidade)
+Para que o código não vire uma bagunça:
+* **Variáveis CSS:** Todas as cores principais devem estar no `:root`. Nunca escreva a cor `#3498db` direto no meio do código, use `var(--accent)`.
+* **Comentários:** Cada seção do CSS deve começar com um comentário de bloco (Ex: `/* --- CARROSSEL --- */`).
+* **Responsividade:** O layout deve "quebrar" para uma coluna simples quando a largura da tela for menor que `768px`.

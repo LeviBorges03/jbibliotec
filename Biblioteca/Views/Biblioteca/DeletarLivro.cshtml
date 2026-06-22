@@ -1,0 +1,27 @@
+@model Biblioteca.Models.DeletarLivroViewModel
+@{
+ViewData["Title"] = "Excluir Livro";
+}
+<div class="form-container" style="max-width: 600px; margin-top: 50px;">
+    <h2 class="text-danger" style="color: #e74c3c;">Excluir Livro</h2>
+    <p style="text-align: center; color: #7f8c8d; font-size: 1.1rem; margin-bottom: 20px;">
+        Tem certeza de que deseja excluir permanentemente este livro?
+    </p>
+
+    <div style="background: var(--bg-light); padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 5px solid #e74c3c;">
+        <div style="margin-bottom: 10px;">
+            <strong style="color: var(--primary);">Título do Livro:</strong>
+            <span style="color: #555; margin-left: 5px;">@Model.Titulo</span>
+        </div>
+        <div>
+            <strong style="color: var(--primary);">Autor Vinculado:</strong>
+            <span style="color: #555; margin-left: 5px;">@Model.AutorNome</span>
+        </div>
+    </div>
+
+    <form asp-action="DeletarLivro" method="post" style="display: flex; gap: 15px;">
+        <input type="hidden" asp-for="Id" name="id" />
+        <button type="submit" class="btn-submit" style="background-color: #e74c3c; flex: 1;">Sim, Excluir</button>
+        <a asp-action="Index" class="btn-submit" style="background-color: #95a5a6; flex: 1; text-align: center; text-decoration: none;">Cancelar</a>
+    </form>
+</div>
