@@ -52,6 +52,22 @@ public class AutorRepository : IAutorRepository
     {
         return await _context.Autores.ToListAsync();
     }
+
+    public async Task<bool> PossuiLivrosVinculadosAsync(int autorId)
+    {
+        // Varre a tabela de Livros procurando se algum possui o ID do autor fornecido
+        return await _context.Livros.AnyAsync(l => l.Autor.Id == autorId);
+    }
+
+    public async Task<bool> ExcluirAutorAsync(int id)
+    {
+        var autor = await _context.Autores.FirstOrDefaultAsync(x => x.Id == id);
+        if (autor == null) return false;
+
+        _context.Autores.Remove(autor);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }
 
 public interface IAutorRepository
@@ -62,5 +78,6 @@ public interface IAutorRepository
     void Update(Autor autor);
     void Delete(int id);
     Task<List<Autor>> BuscarTodosAutoresAsync();
-
+    Task<bool> PossuiLivrosVinculadosAsync(int autorId);
+    Task<bool> ExcluirAutorAsync(int id);
 }

@@ -1,0 +1,40 @@
+@model Biblioteca.Models.DeletarAutorViewModel
+@{
+    ViewData["Title"] = "Excluir Autor";
+}
+<div class="container mt-4">
+    <h1 class="text-danger">Excluir Autor</h1>
+    <hr />
+    @if (Model.PossuiLivrosVinculados)
+    {
+        <div class="alert alert-danger border-danger p-4">
+            <h4 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Operação Bloqueada!</h4>
+            <p>Não é possível excluir o autor <strong>@Model.Nome</strong> porque ele possui livros vinculados ao seu cadastro.</p>
+            <hr>
+            <p class="mb-0 text-muted">Para excluir este autor, você deve primeiro excluir todos os livros associados a ele ou transferi-los para outro autor.</p>
+        </div>
+        <div class="mt-3">
+            <a asp-action="Autor" asp-route-id="@Model.Id" class="btn btn-secondary">Voltar para o Perfil</a>
+        </div>
+    }
+    else
+    {
+        <h3 class="text-muted">Tem certeza de que deseja excluir permanentemente este autor?</h3>
+        <div class="card border-warning mb-4 mt-3">
+            <div class="card-header bg-warning text-dark">
+                <strong>Confirmação de Dados</strong>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Nome do Autor:</dt>
+                    <dd class="col-sm-9">@Model.Nome</dd>
+                </dl>
+            </div>
+        </div>
+        <form asp-action="DeletarAutor" method="post">
+            <input type="hidden" asp-for="Id" name="id" />
+            <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+            <a asp-action="Autor" asp-route-id="@Model.Id" class="btn btn-secondary">Cancelar</a>
+        </form>
+    }
+</div>
