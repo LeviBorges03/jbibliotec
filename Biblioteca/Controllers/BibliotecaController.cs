@@ -20,6 +20,9 @@ public class BibliotecaController : Controller
     public async Task<IActionResult> index()
     {
         var livros = await _livroRepository.BuscarTodosLivrosAsync();
+        var autores = await _autorRepository.BuscarTodosAutoresAsync();
+        ViewBag.Autores = autores;
+
         return View(livros);
     }
 
